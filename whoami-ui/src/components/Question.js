@@ -17,9 +17,9 @@ export default function Question({ image, options, onAnswer = null }) {
     >
       <CardContent>
         <Picture src={image} />
-        {options.map(({ value, correct }, index) => (
+        {options.map(({ name, correct }, index) => (
           <Choice
-            value={value}
+            value={name}
             key={index}
             correct={answered && correct}
             incorrect={index === answer && !correct}
