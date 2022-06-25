@@ -18,7 +18,7 @@ A picture guessing game.
 
 * UI
   * React
-  * Tailwind CSS
+  * Material UI
 * Backend
   * Python
   * FastAPI
