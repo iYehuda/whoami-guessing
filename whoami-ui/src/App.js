@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Container from "@mui/material/Container";
 import { useState } from "react";
 import "./App.css";
@@ -5,17 +6,24 @@ import FinishPage from "./components/FinishPage";
 
 import LoadingCircle from "./components/LoadingCircle";
 import QuestionGame from "./components/QuestionGame";
+import StartPage from "./components/StartPage";
 import WhoamiAppBar from "./components/WhoamiAppBar";
 import { useSettings, useQuestions } from "./hooks";
 
+const STATUS_STARTING = "starting";
 const STATUS_PLAYING = "playing";
 const STATUS_FINISHED = "finished";
 
+function chooseQuestions(allQuestions, count) {
+  return _.sampleSize(allQuestions, count);
+}
+
 function App() {
-  const [status, setStatus] = useState(STATUS_PLAYING);
+  const [status, setStatus] = useState(STATUS_STARTING);
   const [result, setResult] = useState(null);
+  const [questions, setQuestions] = useState(null);
   const {
-    data: questions,
+    data: allQuestions,
     isLoading: isQuestionsLoading,
     isError: isQuestionsError,
   } = useQuestions();
@@ -31,22 +39,32 @@ function App() {
   }
 
   if (isQuestionsError || isSettingsError) {
-    return "Bad";
+    return "Something went wrong...";
   }
 
   return (
     <div className="App">
       <WhoamiAppBar />
       <Container>
-        {status === STATUS_FINISHED ? (
+        {status === STATUS_STARTING && (
+          <StartPage
+            totalQuestions={allQuestions.length}
+            onStart={(questionCount) => {
+              setQuestions(chooseQuestions(allQuestions, questionCount));
+              setStatus(STATUS_PLAYING);
+            }}
+          />
+        )}
+        {status === STATUS_FINISHED && (
           <FinishPage
             score={result.score}
             total={result.total}
             onTryAgain={() => {
-              setStatus(STATUS_PLAYING);
+              setStatus(STATUS_STARTING);
             }}
           />
-        ) : (
+        )}
+        {status === STATUS_PLAYING && (
           <QuestionGame
             questions={questions}
             choicesPerQuestion={choicesPerQuestion}
@@ -54,7 +72,7 @@ function App() {
             onFinished={(score) => {
               setResult({
                 score,
-                total: questions.length,
+                total: allQuestions.length,
               });
               setStatus(STATUS_FINISHED);
             }}

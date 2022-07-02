@@ -30,13 +30,10 @@ export default function QuestionGame({
 }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
-  const shuffledQuestions = useMemo(() => {
-    return _.shuffle(questions);
-  }, [questions]);
-  const answer = shuffledQuestions[currentQuestion];
+  const answer = questions[currentQuestion];
   const choices = useMemo(() => {
-    return getQuestionChoices(shuffledQuestions, answer, choicesPerQuestion);
-  }, [shuffledQuestions, answer, choicesPerQuestion]);
+    return getQuestionChoices(questions, answer, choicesPerQuestion);
+  }, [questions, answer, choicesPerQuestion]);
   const isLastQuestion = currentQuestion === questions.length - 1;
 
   return (

@@ -1,6 +1,6 @@
 import Card from "@mui/material/Card";
 
-export default function GameCard({ children }) {
+export default function GameCard({ children, sx }) {
   return (
     <Card
       variant="outlined"
@@ -8,6 +8,7 @@ export default function GameCard({ children }) {
         display: "inline-block",
         marginBlockStart: "1em",
         maxWidth: "50%",
+        minWidth: "30%",
       }}
     >
       {children}
