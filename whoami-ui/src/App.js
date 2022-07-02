@@ -1,12 +1,19 @@
 import Container from "@mui/material/Container";
+import { useState } from "react";
 import "./App.css";
+import FinishPage from "./components/FinishPage";
 
 import LoadingCircle from "./components/LoadingCircle";
 import QuestionGame from "./components/QuestionGame";
 import WhoamiAppBar from "./components/WhoamiAppBar";
 import { useSettings, useQuestions } from "./hooks";
 
+const STATUS_PLAYING = "playing";
+const STATUS_FINISHED = "finished";
+
 function App() {
+  const [status, setStatus] = useState(STATUS_PLAYING);
+  const [result, setResult] = useState(null);
   const {
     data: questions,
     isLoading: isQuestionsLoading,
@@ -31,11 +38,28 @@ function App() {
     <div className="App">
       <WhoamiAppBar />
       <Container>
-        <QuestionGame
-          questions={questions}
-          choicesPerQuestion={choicesPerQuestion}
-          nextQuestionDelay={nextQuestionDelay}
-        />
+        {status === STATUS_FINISHED ? (
+          <FinishPage
+            score={result.score}
+            total={result.total}
+            onTryAgain={() => {
+              setStatus(STATUS_PLAYING);
+            }}
+          />
+        ) : (
+          <QuestionGame
+            questions={questions}
+            choicesPerQuestion={choicesPerQuestion}
+            nextQuestionDelay={nextQuestionDelay}
+            onFinished={(score) => {
+              setResult({
+                score,
+                total: questions.length,
+              });
+              setStatus(STATUS_FINISHED);
+            }}
+          />
+        )}
       </Container>
     </div>
   );

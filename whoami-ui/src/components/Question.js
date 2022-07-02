@@ -1,23 +1,18 @@
 import { CardContent } from "@mui/material";
-import Card from "@mui/material/Card";
 import { useState } from "react";
 import Choice from "./Choice";
+import GameCard from "./GameCard";
 import Picture from "./Picture";
 
-export default function Question({ image, options, onAnswer = null }) {
+export default function Question({ image, choices, onAnswer = null }) {
   const [answer, setAnswer] = useState(null);
   const answered = answer !== null;
 
   return (
-    <Card
-      sx={{
-        maxWidth: "50%",
-        display: "inline-block",
-      }}
-    >
+    <GameCard>
       <CardContent>
         <Picture src={image} />
-        {options.map(({ name, correct }, index) => (
+        {choices.map(({ name, correct }, index) => (
           <Choice
             value={name}
             key={index}
@@ -28,13 +23,13 @@ export default function Question({ image, options, onAnswer = null }) {
                 ? undefined
                 : () => {
                     setAnswer(index);
-                    onAnswer && onAnswer(options[index], correct);
+                    onAnswer && onAnswer(choices[index], correct);
                   }
             }
             sealed={answered}
           />
         ))}
       </CardContent>
-    </Card>
+    </GameCard>
   );
 }
