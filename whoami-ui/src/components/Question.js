@@ -28,7 +28,7 @@ export default function Question({ image, options, onAnswer = null }) {
                 ? undefined
                 : () => {
                     setAnswer(index);
-                    onAnswer && onAnswer(options[index]);
+                    onAnswer && onAnswer(options[index], correct);
                   }
             }
             sealed={answered}

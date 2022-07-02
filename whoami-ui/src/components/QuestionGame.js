@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import _ from "lodash";
 import Question from "./Question";
 import QuestionIndex from "./QuestionIndex";
+import ScoreBar from "./ScoreBar";
 
 export default function QuestionGame({
   questions,
@@ -10,6 +11,7 @@ export default function QuestionGame({
   nextQuestionDelay,
 }) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [score, setScore] = useState(0);
   const shuffledQuestions = useMemo(() => {
     return _.shuffle(questions);
   }, [questions]);
@@ -38,8 +40,11 @@ export default function QuestionGame({
       <Question
         image={answer.image}
         options={options}
-        onAnswer={() => {
+        onAnswer={(_, correct) => {
           if (currentQuestion < questions.length - 1) {
+            if (correct) {
+              setScore(score + 1);
+            }
             setTimeout(() => {
               setCurrentQuestion(currentQuestion + 1);
             }, nextQuestionDelay);
@@ -47,6 +52,7 @@ export default function QuestionGame({
         }}
         key={currentQuestion}
       ></Question>
+      <ScoreBar score={score} />
     </>
   );
 }
